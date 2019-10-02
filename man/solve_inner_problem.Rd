@@ -5,7 +5,8 @@
 \title{Solves the sparse-group lasso problem}
 \usage{
 solve_inner_problem(data.train, group.length, lambdas, type = "linear",
-  betas.old = rep(0, ncol(data.train$x)), simple = F)
+  betas.old = rep(0, ncol(data.train$x)), simple = FALSE,
+  weights = rep(1, NROW(data.train)))
 }
 \arguments{
 \item{data.train}{A list with matrix \code{x} and response vector \code{y}.}

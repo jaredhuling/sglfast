@@ -3,7 +3,9 @@ run_sgl_linear <- function(data, group.length, thresh = 0.0001, lambda1 = NULL, 
                            inner.iter = 100, outer.iter = 100,
                            outer.thresh = 0.0001, gamma = 0.8, step = 1, reset = 10,
                            min.frac = 0.05, verbose = FALSE,
-                           groupW = NULL){
+                           groupW = NULL,
+                           weights = rep(1, NROW(data)))
+{
   X <- data$x
   y <- data$y
   n <- nrow(X)
@@ -27,7 +29,16 @@ run_sgl_linear <- function(data, group.length, thresh = 0.0001, lambda1 = NULL, 
 
   eta <- rep(0,n)
 
-  junk <- .C("linNest", X = as.double(as.vector(X)), y = as.double(y), index = as.integer(index), nrow = as.integer(nrow(X)), ncol = as.integer(ncol(X)), numGroup = as.integer(num.groups), rangeGroupInd = as.integer(range.group.ind), groupLen = as.integer(group.length), lambda1 = as.double(lambda1), lambda2 = as.double(lambda2), beta = as.double(beta.old), innerIter = as.integer(inner.iter), outerIter = as.integer(outer.iter), thresh = as.double(thresh), outerThresh = as.double(outer.thresh), eta = as.double(eta), gamma = as.double(gamma), betaIsZero = as.integer(beta.is.zero), step = as.double(step), reset = as.integer(reset), groupW = as.double(groupW))
+  junk <- .C("linNest", X = as.double(as.vector(X)),
+             y = as.double(y), index = as.integer(index), 
+             nrow = as.integer(nrow(X)), ncol = as.integer(ncol(X)),
+             numGroup = as.integer(num.groups), rangeGroupInd = as.integer(range.group.ind), 
+             groupLen = as.integer(group.length), lambda1 = as.double(lambda1), 
+             lambda2 = as.double(lambda2), beta = as.double(beta.old), innerIter = as.integer(inner.iter), 
+             outerIter = as.integer(outer.iter), thresh = as.double(thresh), outerThresh = as.double(outer.thresh),
+             eta = as.double(eta), gamma = as.double(gamma), betaIsZero = as.integer(beta.is.zero), 
+             step = as.double(step), reset = as.integer(reset), groupW = as.double(groupW),
+             weights = as.double(weights))
 
   beta <- junk$beta
 

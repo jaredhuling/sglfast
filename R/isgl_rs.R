@@ -12,7 +12,8 @@
 #' @param standardize Whether to stardardize \code{data.train} and \code{data.validate}. Recommended if \code{type} is \code{'logit'}.
 #' @return An object of class \code{isgl}.
 isgl_rs = function( data.train, data.validate, index = NULL, group.length = NULL, type = "linear",
-                 standardize = F){
+                 standardize = FALSE, weights = rep(1, NROW(data.train)))
+{
 
   # We tranform the initial data
   if (standardize){

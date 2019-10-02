@@ -14,7 +14,8 @@
 #' @return An object of class \code{isgl}.
 
 isgl_simple_rs = function( data.train, data.validate, index = NULL, group.length = NULL, type = "linear",
-                        standardize = F){
+                        standardize = FALSE)
+{
   
   # We tranform the initial data
   if (standardize){

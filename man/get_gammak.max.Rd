@@ -5,7 +5,7 @@
 \title{Computes an upper bound for the group lasso regularization penalty.}
 \usage{
 get_gammak.max(data, group.length, k, type, lambda, beta = rep(0,
-  ncol(data$x)), beta0 = 0)
+  ncol(data$x)), beta0 = 0, weights = rep(1, NROW(data)))
 }
 \arguments{
 \item{data}{A list with x and y}

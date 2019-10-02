@@ -4,8 +4,8 @@
 \alias{get_lambda1.max}
 \title{Computes the maximum weight of the lasso penalty}
 \usage{
-get_lambda1.max(data, group.length, beta = rep(0, ncol(data$x)), beta0 = 0,
-  type)
+get_lambda1.max(data, group.length, beta = rep(0, ncol(data$x)),
+  beta0 = 0, type, weights = rep(1, NROW(data)))
 }
 \arguments{
 \item{data}{A list with x and y}

@@ -4,8 +4,9 @@
 \alias{isgl_simple}
 \title{Two-parameter version of the iterative sparse-group lasso}
 \usage{
-isgl_simple(data.train, data.validate, index = NULL, group.length = NULL,
-  type = "linear", standardize = F, momentum = 2)
+isgl_simple(data.train, data.validate, index = NULL,
+  group.length = NULL, type = "linear", standardize = FALSE,
+  momentum = 2, weights = rep(1, NROW(data.train)))
 }
 \arguments{
 \item{data.train}{A list with the matrix of observations \code{x}, and the response \code{y}, to train the model.}

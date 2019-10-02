@@ -15,7 +15,8 @@
 #' @return An object of class \code{isgl}.
 
 isgl_simple = function( data.train, data.validate, index = NULL, group.length = NULL, type = "linear",
-                        standardize = F, momentum = 2){
+                        standardize = FALSE, momentum = 2, weights = rep(1, NROW(data.train))) 
+{
 
   # We tranform the initial data
   if (standardize){
@@ -31,10 +32,11 @@ isgl_simple = function( data.train, data.validate, index = NULL, group.length = 
   }
 
   # We sort and compute group lengths
-  if( is.null(group.length) ){
-    if( is.null(index) ){
-      write("Error 1: You must provide valid group indices or lengths")
-      return(1)
+  if( is.null(group.length) )
+  {
+    if( is.null(index) )
+    {
+      stop("Error 1: You must provide valid group indices or lengths")
     }
     temp = index2group.length(index)
     group.length = temp$group.length
@@ -42,22 +44,24 @@ isgl_simple = function( data.train, data.validate, index = NULL, group.length = 
     data.train$x = data.train$x[, ord]
     data.validate$x = data.validate$x[, ord]
     unord = match(1:length(ord),ord)
-  }else{
+  } else
+  {
     unord = 1:ncol(data.train$x)
   }
+  
 
   # Compute initial lambdas
   lambda.max = c(0, 0)
   gamma = rep(0, length(group.length))
-  lambda.max[1] = get_lambda1.max(data.train, group.length, type = type)
+  lambda.max[1] = get_lambda1.max(data.train, group.length, type = type, weights = weights)
 
   lambda.init = c(lambda.max[1]*0.1, 1)
   for (i in 1:length(gamma)) {
-    gamma[i] = get_gammak.max(data.train, group.length, i, type, lambda.init)
+    gamma[i] = get_gammak.max(data.train, group.length, i, type, lambda.init, weights = weights)
   }
 
   lambda.max[2] = max(gamma/sqrt(group.length))
-
+  
   # Start the iterative search
   nparams = 2
   best_lambdas <- lambda.max*0.1
@@ -65,11 +69,11 @@ isgl_simple = function( data.train, data.validate, index = NULL, group.length = 
   max_solves <- 5000
 
   # Compute initial model
-  model_params = solve_inner_problem(data.train, group.length, best_lambdas, type, simple = T)
+  model_params = solve_inner_problem(data.train, group.length, best_lambdas, type, simple = TRUE, weights = weights)
   best_cost = get_validation_cost(data.validate$x, data.validate$y, model_params, type)
   best_beta = model_params
   num_solves = num_solves+1
-
+  
   # Set initial coordinate
   coord <- 1
   fixed = 0
@@ -89,7 +93,7 @@ isgl_simple = function( data.train, data.validate, index = NULL, group.length = 
     if(t == 0){t = 0.01}
     while (dir >= -1) {
       curr_lambdas[coord] = best_lambdas[coord] + dir*runif(1, 0.1*t, t)
-      model_params <- solve_inner_problem(data.train, group.length, curr_lambdas, type, simple = T)
+      model_params <- solve_inner_problem(data.train, group.length, curr_lambdas, type, simple = TRUE, weights = weights)
       num_solves <- num_solves + 1
       cost <- get_validation_cost( data.validate$x, data.validate$y, model_params, type)
 

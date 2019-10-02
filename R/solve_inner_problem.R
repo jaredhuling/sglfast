@@ -12,21 +12,27 @@
 #' @return A list with the fit \code{beta} and \code{intercept}.
 #'
 solve_inner_problem <- function(data.train, group.length, lambdas, type = "linear",
-                                betas.old = rep(0, ncol(data.train$x)), simple = F ){
-  if( simple ){
-    Sol = SGL(data = data.train,
-              group.length = group.length,
-              type = type,
-              lambda1 = lambdas[1],
-              lambda2 = lambdas[2])
-  }else{
-    Sol = SGL(data = data.train,
-              group.length = group.length,
-              type = type,
-              lambda1 = lambdas[1],
-              lambda2 = lambdas[2],
-              groupW = lambdas[3:length(lambdas)],
-              betas.old = betas.old)
+                                betas.old = rep(0, ncol(data.train$x)), simple = FALSE,
+                                weights = rep(1, NROW(data.train)))
+{
+  if( simple )
+  {
+    Sol = SGLinner(data = data.train,
+                   group.length = group.length,
+                   type = type,
+                   weights = weights,
+                   lambda1 = lambdas[1],
+                   lambda2 = lambdas[2])
+  } else
+  {
+    Sol = SGLinner(data = data.train,
+                   group.length = group.length,
+                   type = type,
+                   weights = weights,
+                   lambda1 = lambdas[1],
+                   lambda2 = lambdas[2],
+                   groupW = lambdas[3:length(lambdas)],
+                   betas.old = betas.old)
   }
   return(Sol)
 }

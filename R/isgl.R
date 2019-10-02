@@ -13,7 +13,8 @@
 #' @param momentum Acceleration rate. Should be > 1.
 #' @return An object of class \code{isgl}.
 isgl = function( data.train, data.validate, index = NULL, group.length = NULL, type = "linear",
-                 standardize = F, momentum = 2){
+                 standardize = FALSE, momentum = 2, weights = rep(1, NROW(data.train)))
+{
 
   # We tranform the initial data
   if (standardize){
@@ -65,7 +66,7 @@ isgl = function( data.train, data.validate, index = NULL, group.length = NULL, t
   max_solves <- 50000
 
   # Compute initial model
-  model_params = solve_inner_problem(data.train, group.length, best_lambdas, type)
+  model_params = solve_inner_problem(data.train, group.length, best_lambdas, type, weights = weights)
   best_cost = get_validation_cost(data.validate$x, data.validate$y, model_params, type)
   best_beta = model_params
   num_solves = num_solves+1
@@ -94,7 +95,7 @@ isgl = function( data.train, data.validate, index = NULL, group.length = NULL, t
     if(t == 0){t = 0.01} #just in case... it should never reach 0 tho
     while (dir >= -1) {
       curr_lambdas[coord] = best_lambdas[coord] + dir*runif(1, 0.1*t, t)
-      model_params <- solve_inner_problem(data.train, group.length, curr_lambdas, type)
+      model_params <- solve_inner_problem(data.train, group.length, curr_lambdas, type, weights = weights)
       num_solves <- num_solves + 1
       cost <- get_validation_cost( data.validate$x, data.validate$y, model_params, type)
 

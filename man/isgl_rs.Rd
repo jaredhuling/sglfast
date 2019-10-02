@@ -5,7 +5,8 @@
 \title{The iterative sparse-group lasso with random step}
 \usage{
 isgl_rs(data.train, data.validate, index = NULL, group.length = NULL,
-  type = "linear", standardize = F)
+  type = "linear", standardize = FALSE, weights = rep(1,
+  NROW(data.train)))
 }
 \arguments{
 \item{data.train}{A list with the matrix of observations \code{x}, and the response \code{y}, to train the model.}

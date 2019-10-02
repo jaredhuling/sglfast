@@ -8,7 +8,8 @@
 #' @param beta0 A number, the intercept
 #' @param type A string. Type of loss function: \code{'logit'} or \code{'linear'}
 #' @return A number. The maximum \eqn{\lambda_1}
-get_lambda1.max = function(data, group.length, beta = rep(0, ncol(data$x)), beta0 = 0,  type){
+get_lambda1.max = function(data, group.length, beta = rep(0, ncol(data$x)), beta0 = 0,  type, weights = rep(1, NROW(data)))
+{
   if (type == "linear"){
     d = rep(0, ncol(data$x))
     for(i in 1:length(d)){

@@ -12,17 +12,21 @@
 #' @return A number. The upper bound for \eqn{\gamma_k}.
 
 get_gammak.max = function(data, group.length, k, type, lambda, beta = rep(0, ncol(data$x)),
-                          beta0 = 0){
-  if( type == "linear" ){
+                          beta0 = 0, weights = rep(1, NROW(data)))
+{
+  if( type == "linear" )
+  {
     group.start= c(0, cumsum(group.length)) + 1
     indices = group.start[k]:(group.start[k]+group.length[k] - 1)
-    z = 1/nrow(data$x)*t(data$x[,indices])%*%(data$y - data$x[,-indices]%*%beta[-indices] - beta0)
+    z = 1/nrow(data$x)*t(data$x[,indices]) %*% (weights * (data$y - data$x[,-indices]%*%beta[-indices] - beta0))
     S = 0
-    for(i in 1:group.length[k]){
+    for(i in 1:group.length[k])
+    {
       S = S + max(abs(z[i]) - lambda[1], 0)^2
     }
     gammaj.max = sqrt(S)/lambda[2]
-  }else if( type == "logit"){
+  } else if( type == "logit")
+  {
     group.start= c(0, cumsum(group.length)) + 1
     indices = group.start[k]:(group.start[k]+group.length[k] - 1)
     d = rep(0, nrow(data$x))
