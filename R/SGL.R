@@ -30,6 +30,7 @@ SGLinner <- function(data, group.length, type = "linear", maxit = 1000, thresh =
 
 
 
+
 SGL2 <- function (data, index, type = "linear", maxit = 1000, thresh = 0.001, 
                   min.frac = 0.1, nlam = 20, gamma = 0.8, standardize = TRUE, 
                   verbose = FALSE, step = 1, reset = 10, alpha = 0.95, lambdas = NULL,
@@ -107,7 +108,7 @@ oneDimLogit2 <- function (data, index, thresh = 1e-04, lambdas = NULL, beta.naug
                           nlam = 20, verbose = FALSE, groupW, weights = rep(1, NROW(data$x)) ) 
 {
   if (is.null(lambdas)) {
-    lambdas <- betterPathCalc(data = data, index = index, 
+    lambdas <- SGL:::betterPathCalc(data = data, index = index, 
                               alpha = alpha, min.frac = min.frac, nlam = nlam, 
                               type = "logit")
   }
